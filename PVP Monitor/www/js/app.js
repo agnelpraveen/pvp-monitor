@@ -25,12 +25,62 @@ var app = {
 		
 			appSetup();
 			
-			getAllPanjayathsData();
+			setupLogin();		
+			
 		} catch(err) {
 			alert('Error' + err);
 		}
     }
 };
+
+function setupLogin() {
+	$('#loginForm').on('submit', function(e){
+		var username = $('#usernameTB').val(), password = $('#passwordTB').val();
+		
+		e.preventDefault();
+		
+		$.ajax({
+			url:'http://agnelpraveen.freeoda.com/validateuser.php',
+			type:'POST',		   
+			crossDomain: true,
+			dataType: 'json',
+			data:{ username: username, password: password },
+			success:function(data){
+				if(data.error) {
+					alert('Invalid username or password.');
+				} else {
+					window.pvpuser = data;
+					
+					if(pvpuser.role == "PanjayathAdmin") {
+						$('#main-nav').addClass('hidden');
+						showPanjayathView(pvpuser.panjayathname);
+					} else {					
+						getAllPanjayathsData();
+					}
+				}
+			},
+			error:function(w,t,f){
+				alert("Error connecting server. Please try again.");
+			}
+		});
+		
+		return false;
+	});
+	
+	$('#logoutLink').on('click', function(e) {
+		e.preventDefault();
+		
+		$('#details-table').DataTable().destroy();
+		$('#plf-loan-details-table').DataTable().destroy();
+		
+		$('#dashboardView').addClass('hidden');
+		$('#loginView').removeClass("hidden");
+				
+		$('#passwordTB').val('');
+		
+		return false;
+	});
+}
 
 function getAllPanjayathsData() {	
 	window.panjayathLoanData = [];
@@ -44,6 +94,11 @@ function populateDashboardWithPanjayathsData(data) {
 	var panjayaths = data.panjayaths, panjayathIndex = 0, panjayathsCount = panjayaths.length, panjayath = undefined,			 
 		totalPendingAmount = 0, totalPendingInstallments = 0, totalRepaymentAmount = 0, totalRepaymentAmountPaid = 0,
 		detailsTableBody = '', $sideMenu = $('#side-menu');
+		
+	$('#page-header').text('All Panjayaths');
+	$('#main-nav').removeClass('hidden');	
+	$('#all-panjayaths-container').removeClass('hidden');
+	$('#selected-panjayath-container').addClass('hidden');
 	
 	while(panjayathIndex < panjayathsCount) {
 		panjayath = panjayaths[panjayathIndex];
@@ -78,7 +133,9 @@ function populateDashboardWithPanjayathsData(data) {
 		responsive: true
 	});
 	
-	$('#wrapper').removeClass("hidden");
+	$('#loginView').addClass('hidden');
+	$('#dashboardView').removeClass("hidden");
+		
 	$sideMenu.metisMenu().on('click', 'a', function(e){
 		var selectedPanjayath = $(this).data('panjayath');
 		e.preventDefault();
@@ -90,87 +147,92 @@ function populateDashboardWithPanjayathsData(data) {
 			$('#page-header').text('All Panjayaths');
 			$('#selected-panjayath-container').addClass('hidden');
 			$('#all-panjayaths-container').removeClass('hidden');			
-		} else {
-			
-			$.getJSON('http://agnelpraveen.freeoda.com/loandata/data/' + selectedPanjayath + '.json', function(data){
-				var plfLoans = data.PLFLoans, plfLoanIndex = 0, plfLoan = undefined, shgName = undefined;
-					nameOfSHGs = [], plfLoanDetails = [], nameOfSHGIndex = 0, existingLoanDetail = undefined, loanDetail = undefined
-					loanDetailsTableData = [];
-				
-				$('#page-header').text(selectedPanjayath);
-				$('#all-panjayaths-container').addClass('hidden');
-				$('#selected-panjayath-container').removeClass('hidden');
-				
-				$('#panjayathTotalPendingAmount').html('<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(data.TotalRepayableAmountPending)));
-				$('#panjayathTotalPendingInstallments').html(Math.round(data.TotalPendingInstallments));
-				$('#panjayathTotalRepaymentAmount').html('<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(data.TotalRepayableAmount)));
-				$('#panjayathTotalRepaymentAmountPaid').html('<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(data.TotalRepaymentAmountPaid)));
-				
-				while(plfLoanIndex < plfLoans.length) {
-					plfLoan = plfLoans[plfLoanIndex];
-					shgName = plfLoan.NameOfApplicant;
-					
-					existingLoanDetail = plfLoanDetails[shgName];
-					
-					if(existingLoanDetail) {
-						existingLoanDetail.noOfPLFLoans++;
-						existingLoanDetail.approvedAmount += plfLoan.LoanApprovedAmount;
-						existingLoanDetail.paidAmount += plfLoan.TotalRepaymentAmountPaid;
-						existingLoanDetail.pendingInstallments += plfLoan.TotalPendingInstallments;
-						existingLoanDetail.pendingAmount +=	plfLoan.TotalPendingAmount;
-						existingLoanDetail.remainingInstallments +=	plfLoan.RemainingInstallments;	
-					} else {
-						nameOfSHGs.push(shgName);
-						plfLoanDetails[shgName] = { nameOfSHG: shgName,
-													noOfPLFLoans: 1,
-													approvedAmount: plfLoan.LoanApprovedAmount,
-													paidAmount: plfLoan.TotalRepaymentAmountPaid,
-													pendingInstallments: plfLoan.TotalPendingInstallments,
-													pendingAmount: plfLoan.TotalPendingAmount,
-													remainingInstallments: plfLoan.RemainingInstallments };
-					}
-					
-						
-					plfLoanIndex++;
-				}
-				
-				while(nameOfSHGIndex < nameOfSHGs.length) {
-					loanDetail = plfLoanDetails[nameOfSHGs[nameOfSHGIndex]];
-					
-					loanDetailsTableData.push([loanDetail.nameOfSHG,
-											   loanDetail.noOfPLFLoans,
-											   '<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(loanDetail.approvedAmount)),
-											   '<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(loanDetail.paidAmount)),
-											   commaSeparateNumber(Math.round(loanDetail.pendingInstallments)),
-											   '<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(loanDetail.pendingAmount)),
-											   commaSeparateNumber(Math.round(loanDetail.remainingInstallments))]);
-					
-					nameOfSHGIndex++;
-				}			
-				
-				/*$('#plf-loan-details-table-body').html(loanDetailsTableBody).on('click', 'tr', function(){
-					var selectedSHG = $(this).data('shgLeader');
-					console.log(selectedSHG);
-				});*/
-				
-				$('#plf-loan-details-table').DataTable({ responsive: true, destroy:true, data:loanDetailsTableData,
-														 "rowCallback": function( row, data, index ) {
-															var pendingInstallments = data[4];
-															if (pendingInstallments > 2) {
-																$(row).addClass('danger');
-															} else if(pendingInstallments >= 1) {
-																$(row).addClass('warning');
-															}
-														 }
-			  });
-				
-				
-			}, function(){
-				alert("Error Loading Data");
-			});
+		} else {			
+			showPanjayathView(selectedPanjayath);
 		}
 		
 		return false;
+	});
+}
+
+function showPanjayathView(selectedPanjayath) {
+	$.getJSON('http://agnelpraveen.freeoda.com/loandata/data/' + selectedPanjayath + '.json', function(data){
+		var plfLoans = data.PLFLoans, plfLoanIndex = 0, plfLoan = undefined, shgName = undefined;
+			nameOfSHGs = [], plfLoanDetails = [], nameOfSHGIndex = 0, existingLoanDetail = undefined, loanDetail = undefined
+			loanDetailsTableData = [];			
+		
+		$('#page-header').text(selectedPanjayath);
+		$('#all-panjayaths-container').addClass('hidden');
+		$('#selected-panjayath-container').removeClass('hidden');
+		
+		$('#panjayathTotalPendingAmount').html('<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(data.TotalRepayableAmountPending)));
+		$('#panjayathTotalPendingInstallments').html(Math.round(data.TotalPendingInstallments));
+		$('#panjayathTotalRepaymentAmount').html('<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(data.TotalRepayableAmount)));
+		$('#panjayathTotalRepaymentAmountPaid').html('<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(data.TotalRepaymentAmountPaid)));
+		
+		while(plfLoanIndex < plfLoans.length) {
+			plfLoan = plfLoans[plfLoanIndex];
+			shgName = plfLoan.NameOfApplicant;
+			
+			existingLoanDetail = plfLoanDetails[shgName];
+			
+			if(existingLoanDetail) {
+				existingLoanDetail.noOfPLFLoans++;
+				existingLoanDetail.approvedAmount += plfLoan.LoanApprovedAmount;
+				existingLoanDetail.paidAmount += plfLoan.TotalRepaymentAmountPaid;
+				existingLoanDetail.pendingInstallments += plfLoan.TotalPendingInstallments;
+				existingLoanDetail.pendingAmount +=	plfLoan.TotalPendingAmount;
+				existingLoanDetail.remainingInstallments +=	plfLoan.RemainingInstallments;	
+			} else {
+				nameOfSHGs.push(shgName);
+				plfLoanDetails[shgName] = { nameOfSHG: shgName,
+											noOfPLFLoans: 1,
+											approvedAmount: plfLoan.LoanApprovedAmount,
+											paidAmount: plfLoan.TotalRepaymentAmountPaid,
+											pendingInstallments: plfLoan.TotalPendingInstallments,
+											pendingAmount: plfLoan.TotalPendingAmount,
+											remainingInstallments: plfLoan.RemainingInstallments };
+			}
+			
+				
+			plfLoanIndex++;
+		}
+		
+		while(nameOfSHGIndex < nameOfSHGs.length) {
+			loanDetail = plfLoanDetails[nameOfSHGs[nameOfSHGIndex]];
+			
+			loanDetailsTableData.push([loanDetail.nameOfSHG,
+									   loanDetail.noOfPLFLoans,
+									   '<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(loanDetail.approvedAmount)),
+									   '<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(loanDetail.paidAmount)),
+									   commaSeparateNumber(Math.round(loanDetail.pendingInstallments)),
+									   '<span class="fa fa-rupee"></span> ' + commaSeparateNumber(Math.round(loanDetail.pendingAmount)),
+									   commaSeparateNumber(Math.round(loanDetail.remainingInstallments))]);
+			
+			nameOfSHGIndex++;
+		}			
+		
+		/*$('#plf-loan-details-table-body').html(loanDetailsTableBody).on('click', 'tr', function(){
+			var selectedSHG = $(this).data('shgLeader');
+			console.log(selectedSHG);
+		});*/
+		
+		$('#plf-loan-details-table').DataTable({ responsive: true, destroy:true, data:loanDetailsTableData,
+												 "rowCallback": function( row, data, index ) {
+													var pendingInstallments = data[4];
+													if (pendingInstallments > 2) {
+														$(row).addClass('danger');
+													} else if(pendingInstallments >= 1) {
+														$(row).addClass('warning');
+													}
+												 }
+		});
+	
+		$('#loginView').addClass('hidden');
+		$('#dashboardView').removeClass("hidden");
+		
+	}, function(){
+		alert("Error Loading Data");
 	});
 }
 
