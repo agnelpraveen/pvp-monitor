@@ -24,12 +24,17 @@ body {
 }
 
 @media(min-width:768px) {
-    #page-wrapper {
+    /*#page-wrapper {
         position: inherit;
         margin: 0 0 0 250px;
         padding: 0 30px;
         border-left: 1px solid #e7e7e7;
-    }
+    }*/
+	
+	#error-info {
+		width:50%;
+		left:25%;
+	}
 }
 
 .navbar-top-links {
@@ -216,7 +221,12 @@ body {
 }
 
 .login-panel {
-    margin-top: 25%;
+    margin-top: 40%;
+}
+
+.login-panel img {
+	height: 80px;
+	margin-bottom:20px;
 }
 
 .flot-chart {
@@ -363,9 +373,8 @@ table.dataTable thead .sorting:after {
 *******************************/
 #error-info {
     display:none;
-    margin:20px;
     position:fixed;
-    top:20%;
+    top:40px;
     z-index:9998;
 }
 

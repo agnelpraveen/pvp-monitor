@@ -10,6 +10,7 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
+		//app.receivedEvent('deviceready');
     },
     // deviceready Event Handler
     //
@@ -58,9 +59,6 @@ function setupLogin() {
 						getAllPanjayathsData();
 					}
 				}
-			},
-			error:function(w,t,f){
-				alert("Error connecting server. Please try again.");
 			}
 		});
 		
