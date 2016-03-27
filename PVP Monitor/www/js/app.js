@@ -52,10 +52,31 @@ function setupLogin() {
 				} else {
 					window.pvpuser = data;
 					
+					$('#viewContainer').removeClass('hidden');
+					
+					
+					
+					$('#main-nav a.active').removeClass('active');
+					
+					$('#dashboardLink').addClass('active');
+					
+					
+					$('#currUsername').text(pvpuser.name);					
+					
 					if(pvpuser.role == "PanjayathAdmin") {
-						$('#main-nav').addClass('hidden');
+						$('#selectPanjayathsMenu').addClass('hidden');
+						$('#panjayathViewFooter').removeClass('hidden');
+						
+						$('#loansLink').parent().removeClass('hidden');
+						$('#shgsLink').parent().removeClass('hidden');
+						
 						showPanjayathView(pvpuser.panjayathname);
-					} else {					
+					} else {
+						$('#panjayathViewFooter').addClass('hidden');
+						$('#selectPanjayathsMenu').removeClass('hidden');
+						
+						$('#loansLink').parent().addClass('hidden');
+						$('#shgsLink').parent().addClass('hidden');
 						getAllPanjayathsData();
 					}
 				}
@@ -71,12 +92,31 @@ function setupLogin() {
 		$('#details-table').DataTable().destroy();
 		$('#plf-loan-details-table').DataTable().destroy();
 		
-		$('#dashboardView').addClass('hidden');
+		$('#viewContainer').addClass('hidden');
 		$('#loginView').removeClass("hidden");
 				
 		$('#passwordTB').val('');
 		
 		return false;
+	});
+	
+	$('#dashboardLink').on('click', function(){
+		$('#main-nav a.active').removeClass('active');
+					
+		$(this).addClass('active');
+		
+		$('#dashboardView, #dashboardActionLinks').removeClass('hidden');
+		$('#loansView, #loansActionLinks').addClass('hidden');
+		
+	});
+	
+	$('#loansLink').on('click', function(){
+		$('#main-nav a.active').removeClass('active');
+					
+		$(this).addClass('active');
+		
+		$('#dashboardView, #dashboardActionLinks').addClass('hidden');
+		$('#loansView, #loansActionLinks').removeClass('hidden');
 	});
 }
 
@@ -93,8 +133,8 @@ function populateDashboardWithPanjayathsData(data) {
 		totalPendingAmount = 0, totalPendingInstallments = 0, totalRepaymentAmount = 0, totalRepaymentAmountPaid = 0,
 		detailsTableBody = '', $sideMenu = $('#side-menu');
 		
-	$('#page-header').text('All Panjayaths');
-	$('#main-nav').removeClass('hidden');	
+	$('#panjayath-info').text('All Panjayaths');
+	$('#selectPanjayathsMenu').removeClass('hidden');	
 	$('#all-panjayaths-container').removeClass('hidden');
 	$('#selected-panjayath-container').addClass('hidden');
 	
@@ -142,7 +182,7 @@ function populateDashboardWithPanjayathsData(data) {
 		$('a[data-panjayath="'+ selectedPanjayath +'"]', $sideMenu).addClass('active');
 		
 		if(selectedPanjayath == "All") {
-			$('#page-header').text('All Panjayaths');
+			$('#panjayath-info').text('All Panjayaths');
 			$('#selected-panjayath-container').addClass('hidden');
 			$('#all-panjayaths-container').removeClass('hidden');			
 		} else {			
@@ -159,7 +199,7 @@ function showPanjayathView(selectedPanjayath) {
 			nameOfSHGs = [], plfLoanDetails = [], nameOfSHGIndex = 0, existingLoanDetail = undefined, loanDetail = undefined
 			loanDetailsTableData = [];			
 		
-		$('#page-header').text(selectedPanjayath);
+		$('#panjayath-info').text(selectedPanjayath);
 		$('#all-panjayaths-container').addClass('hidden');
 		$('#selected-panjayath-container').removeClass('hidden');
 		

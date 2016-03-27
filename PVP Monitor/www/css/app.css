@@ -6,6 +6,7 @@
 
 body {
     background-color: #f8f8f8;
+	padding-top:70px;
 }
 
 #page-header {
@@ -23,6 +24,13 @@ body {
     background-color: #fff;
 }
 
+footer{
+	position:fixed;
+	bottom:0;
+	width:100%;
+	z-index:100;
+}
+
 @media(min-width:768px) {
     /*#page-wrapper {
         position: inherit;
@@ -31,10 +39,105 @@ body {
         border-left: 1px solid #e7e7e7;
     }*/
 	
+	#viewContainer {
+		max-width:1200px;
+		margin:0 auto;
+		position: relative;
+		overflow: hidden;
+	}
+	
 	#error-info {
 		width:50%;
 		left:25%;
 	}
+}
+
+#viewContainer main{	
+	position: relative;
+	overflow: hidden;
+	padding:20px 0 90px;
+}
+
+#viewContainer main:before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.3;
+    background-image: url('../img/tn-logo.svg');
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    -ms-background-size: contain;
+    -o-background-size: contain;
+    -moz-background-size: contain;
+    -webkit-background-size: contain;
+    background-size: contain;
+}
+
+.navbar {
+	height:70px;
+	margin-bottom:0;
+}
+
+.navbar-brand {
+	line-height:40px;
+	border-right:1px solid #eee;
+	height:70px;
+	font-weight:bold;
+}
+
+.navbar-brand img {
+	height:40px;
+	margin-right:10px;
+	display:inline-block;
+}
+
+.navbar-custom >li {	
+	border-right:1px solid #eee;
+}
+
+.navbar-custom >li>a{
+	padding-top:10px;
+	padding-bottom:12px;
+	font-weight:bold;
+	text-align:center;
+}
+
+.navbar-custom >li>a.active, .navbar-custom>li>a.active:focus, .navbar-custom>li>a.active:hover {
+	background-color: transparent;
+    padding-bottom: 6px;
+    border-bottom: 5px solid #296734;
+	color:#333;
+}
+
+.navbar-right.navbar-custom >li>a {
+	border-right:none;
+	border-left:1px solid #eee;
+}
+
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+	border-color: #eee;
+}
+
+.custom-app-info {
+	background-color:#ccc;
+	padding:5px 0;
+}
+
+.view-action-links {
+	background-color:#333;	
+}
+
+.view-action-links .btn {
+	color:#aaa;
+}
+
+.view-action-links .btn.active {
+	color:#fff;
 }
 
 .navbar-top-links {
@@ -218,10 +321,6 @@ body {
 .chat-panel .panel-body {
     height: 350px;
     overflow-y: scroll;
-}
-
-.login-panel {
-    margin-top: 40%;
 }
 
 .login-panel img {

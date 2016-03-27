@@ -58,7 +58,7 @@
 			<div id="loading-overlay"></div>
 			<div id="loading-info"></div>
 			<div id="error-info" class="alert alert-danger fade in">
-				<a href="#" class="close" data-dismiss="alert">&times;</a>
+				<a href="#" class="close" onclick="$(this).parent().hide();">&times;</a>
 				<strong>Error!</strong> A problem has been occurred while loading data. Please check internet connection.
 			</div>
 		</div>
@@ -100,758 +100,828 @@
 				</div>
 			</div>
 		</div>
-
-		<div id="dashboardView" class="hidden">
-
-			<!-- Navigation -->
-			<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="index.html">PLF Dashboard</a>
-				</div>
-				<!-- /.navbar-header -->
-
-				<ul class="nav navbar-top-links navbar-right">
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-						</a>
-						<ul class="dropdown-menu dropdown-user">
-							<li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+		
+		<div id="viewContainer" class="hidden">
+			<header>
+				<!-- Navigation -->
+				<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+					<div class="container-fluid">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a class="navbar-brand" href="index.html"><img src="img/puthu-vazhvu.png"/> PVP Monitor</a>
+						</div>
+						<!-- /.navbar-header -->
+						
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						  
+						  <ul id="main-nav" class="nav navbar-nav navbar-custom">
+							<li id="selectPanjayathsMenu" class="dropdown">
+							  <a href="#panjayaths" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bank fa-2x"></i><br/>Panjayaths List <span class="caret"></span></a>
+							  <ul id="side-menu" class="dropdown-menu">							
+								<li><a href="#" data-panjayath="All"><i class="fa fa-dashboard fa-fw"></i> All Panjayaths</a></li>
+							  </ul>
 							</li>
-							<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-							</li>
-							<li class="divider"></li>
-							<li><a id="logoutLink" href="#logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-							</li>
-						</ul>
-						<!-- /.dropdown-user -->
-					</li>
-					<!-- /.dropdown -->
-				</ul>
-				<!-- /.navbar-top-links -->
-
-				<div class="navbar-default sidebar" role="navigation">
-					<div id="main-nav" class="sidebar-nav navbar-collapse">
-						<ul class="nav" id="side-menu">
-							<li><a class="active" href="#" data-panjayath="All"><i class="fa fa-dashboard fa-fw"></i> All Panjayaths</a></li>
-						</ul>
+							<li><a id="dashboardLink" href="#dashboard"><i class="fa fa-dashboard fa-2x"></i><br/>Dashboard</a></li>
+							<li><a id="loansLink" href="#loans"><i class="fa fa-money fa-2x"></i><br/>Loans</a></li>
+							<li><a id="shgsLink" href="#shgs"><i class="fa fa-group fa-2x"></i><br/>SHG's</a></li>
+						  </ul>
+						  <ul class="nav navbar-nav navbar-right navbar-custom">						
+							<li class="dropdown">
+							  <a href="#user" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-2x"></i><br/><span id="currUsername">TUT PVP Admin</span> <span class="caret"></span></a>
+							  <ul class="dropdown-menu">							
+								<li><a href="#"><i class="fa fa-user"></i> My Profile</a></li>
+								<li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a id="logoutLink" href="#logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+							  </ul>
+							</li>							
+						  </ul>
+						</div><!-- /.navbar-collapse -->
 					</div>
-					<!-- /.sidebar-collapse -->
-				</div>
-				<!-- /.navbar-static-side -->
-			</nav>
-
-			<div id="page-wrapper">
-				<div class="row">
-					<div class="col-lg-12">
-						<h1 id="page-header" class="page-header">All Panjayaths</h1>
-					</div>
-					<!-- /.col-lg-12 -->
-				</div>
-				<!-- /.row -->
-				<div id="all-panjayaths-container">
-				<div class="row">
-					<div class="col-lg-3 col-md-6 col-sm-6">
-						<div class="panel panel-primary">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">
-										<i class="fa fa-money fa-3x"></i>
-									</div>
-									<div class="col-xs-9 text-right">
-										<div id="totalRepaymentAmount" class="huge"></div>
-										<div>Total Repayable Amount</div>
-									</div>
-								</div>
+				</nav>				
+			</header>
+			<main>
+				<div id="dashboardView" class="page-view">
+					<div id="page-wrapper">
+						<div class="row hidden">
+							<div class="col-lg-12">
+								<h1 id="page-header" class="page-header">All Panjayaths</h1>
 							</div>
-							<a href="#" class="hidden">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
+							<!-- /.col-lg-12 -->
 						</div>
-					</div>
-					<div class="col-lg-3 col-md-6 col-sm-6">
-						<div class="panel panel-green">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">
-										<i class="fa fa-money fa-3x"></i>
+						<!-- /.row -->
+						<div id="all-panjayaths-container">
+						<div class="row">
+							<div class="col-lg-3 col-md-6 col-sm-6">
+								<div class="panel panel-primary">
+									<div class="panel-heading">
+										<div class="row">
+											<div class="col-xs-3">
+												<i class="fa fa-money fa-3x"></i>
+											</div>
+											<div class="col-xs-9 text-right">
+												<div id="totalRepaymentAmount" class="huge"></div>
+												<div>Total Repayable Amount</div>
+											</div>
+										</div>
 									</div>
-									<div class="col-xs-9 text-right">
-										<div id="totalRepaymentAmountPaid" class="huge"></div>
-										<div>Total Repayment Amount Paid</div>
-									</div>
+									<a href="#" class="hidden">
+										<div class="panel-footer">
+											<span class="pull-left">View Details</span>
+											<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
+									</a>
 								</div>
 							</div>
-							<a href="#" class="hidden">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
+							<div class="col-lg-3 col-md-6 col-sm-6">
+								<div class="panel panel-green">
+									<div class="panel-heading">
+										<div class="row">
+											<div class="col-xs-3">
+												<i class="fa fa-money fa-3x"></i>
+											</div>
+											<div class="col-xs-9 text-right">
+												<div id="totalRepaymentAmountPaid" class="huge"></div>
+												<div>Total Repayment Amount Paid</div>
+											</div>
+										</div>
+									</div>
+									<a href="#" class="hidden">
+										<div class="panel-footer">
+											<span class="pull-left">View Details</span>
+											<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
+									</a>
 								</div>
-							</a>
+							</div>
+							<div class="col-lg-3 col-md-6 col-sm-6">
+								<div class="panel panel-yellow">
+									<div class="panel-heading">
+										<div class="row">
+											<div class="col-xs-3">
+												<i class="fa fa-tasks fa-3x"></i>
+											</div>
+											<div class="col-xs-9 text-right">
+												<div id="totalPendingInstallments" class="huge"></div>
+												<div>Total Pending Installments</div>
+											</div>
+										</div>
+									</div>
+									<a href="#" class="hidden">
+										<div class="panel-footer">
+											<span class="pull-left">View Details</span>
+											<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-6 col-sm-6">
+								<div class="panel panel-red">
+									<div class="panel-heading">
+										<div class="row">
+											<div class="col-xs-3">
+												<i class="fa fa-money fa-3x"></i>
+											</div>
+											<div class="col-xs-9 text-right">
+												<div id="totalPendingAmount" class="huge"></div>
+												<div>Total Repayable Amount Pending</div>
+											</div>
+										</div>
+									</div>
+									<a href="#" class="hidden">
+										<div class="panel-footer">
+											<span class="pull-left">View Details</span>
+											<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
+									</a>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div class="col-lg-3 col-md-6 col-sm-6">
-						<div class="panel panel-yellow">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">
-										<i class="fa fa-tasks fa-3x"></i>
-									</div>
-									<div class="col-xs-9 text-right">
-										<div id="totalPendingInstallments" class="huge"></div>
-										<div>Total Pending Installments</div>
-									</div>
-								</div>
-							</div>
-							<a href="#" class="hidden">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
-						</div>
-					</div>
-					<div class="col-lg-3 col-md-6 col-sm-6">
-						<div class="panel panel-red">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">
-										<i class="fa fa-money fa-3x"></i>
-									</div>
-									<div class="col-xs-9 text-right">
-										<div id="totalPendingAmount" class="huge"></div>
-										<div>Total Repayable Amount Pending</div>
-									</div>
-								</div>
-							</div>
-							<a href="#" class="hidden">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
-						</div>
-					</div>
-				</div>
-				<!-- /.row -->
-				
-				 <div class="row">
-					<div class="col-lg-12">
-						<div class="panel panel-default">
-							<div class="panel-heading">All Panjayaths SHG Repayment Pending Info</div>
-							<!-- /.panel-heading -->
-							<div class="panel-body">
-								<div class="dataTable_wrapper">
-									<table class="table table-striped table-bordered table-hover" id="details-table">
-										<thead>
-											<tr>
-												<th>Panjayath Name</th>
-												<th>Custer</th>
-												<th>Block</th>
-												<th>No of SHGs</th>
-												<th>Pending Amount</th>
-												<th>Last Updated On</th>
-											</tr>
-										</thead>
-										<tbody id="details-table-body"></tbody>
-									</table>
-								</div>
-								<!-- /.table-responsive -->                            
-							</div>
-							<!-- /.panel-body -->
-						</div>
-						<!-- /.panel -->
-					</div>
-					<!-- /.col-lg-12 -->
-				</div>
-				<!-- /.row -->
-				</div>
-				
-				<div id="selected-panjayath-container" class="hidden">
-				<div class="row">
-					<div class="col-lg-3 col-md-6">
-						<div class="panel panel-primary">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">
-										<i class="fa fa-money fa-3x"></i>
-									</div>
-									<div class="col-xs-9 text-right">
-										<div id="panjayathTotalRepaymentAmount" class="huge"></div>
-										<div>Total Repayable Amount</div>
-									</div>
-								</div>
-							</div>
-							<a href="#" class="hidden">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
-						</div>
-					</div>
-					<div class="col-lg-3 col-md-6">
-						<div class="panel panel-green">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">
-										<i class="fa fa-money fa-3x"></i>
-									</div>
-									<div class="col-xs-9 text-right">
-										<div id="panjayathTotalRepaymentAmountPaid" class="huge"></div>
-										<div>Total Repayment Amount Paid</div>
-									</div>
-								</div>
-							</div>
-							<a href="#" class="hidden">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
-						</div>
-					</div>
-					<div class="col-lg-3 col-md-6">
-						<div class="panel panel-yellow">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">
-										<i class="fa fa-tasks fa-3x"></i>
-									</div>
-									<div class="col-xs-9 text-right">
-										<div id="panjayathTotalPendingInstallments" class="huge"></div>
-										<div>Total Pending Installments</div>
-									</div>
-								</div>
-							</div>
-							<a href="#" class="hidden">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
-						</div>
-					</div>
-					<div class="col-lg-3 col-md-6">
-						<div class="panel panel-red">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">
-										<i class="fa fa-money fa-3x"></i>
-									</div>
-									<div class="col-xs-9 text-right">
-										<div id="panjayathTotalPendingAmount" class="huge"></div>
-										<div>Total Repayable Amount Pending</div>
-									</div>
-								</div>
-							</div>
-							<a href="#" class="hidden">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
-						</div>
-					</div>
-				</div>
-				<!-- /.row -->
-				
-				 <div class="row">
-					<div class="col-lg-12">
-						<div class="panel panel-default">
-							<div class="panel-heading">PLF Loan details of SHG Leaders</div>
-							<!-- /.panel-heading -->
-							<div class="panel-body">
-								<div class="dataTable_wrapper">
-									<table class="table table-striped table-bordered table-hover" id="plf-loan-details-table">
-										<thead>
-											<tr>
-												<th>SHG Leader Name</th>
-												<th>No of PLF Loans</th>											
-												<th>Loan Approved Amount</th>
-												<th>Loan Repayment Amount Paid</th>
-												<th>Pending Installments</th>											
-												<th>Pending Repayment Amount</th>
-												<th>Remaining Installments</th>
-											</tr>
-										</thead>
-										<tbody id="plf-loan-details-table-body"></tbody>
-									</table>
-								</div>
-								<!-- /.table-responsive -->                            
-							</div>
-							<!-- /.panel-body -->
-						</div>
-						<!-- /.panel -->
-					</div>
-					<!-- /.col-lg-12 -->
-				</div>
-				<!-- /.row -->
-				</div>
-				
-				<div class="row hidden">
-					<div class="col-lg-8">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
-								<div class="pull-right">
-									<div class="btn-group">
-										<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-											Actions
-											<span class="caret"></span>
-										</button>
-										<ul class="dropdown-menu pull-right" role="menu">
-											<li><a href="#">Action</a>
-											</li>
-											<li><a href="#">Another action</a>
-											</li>
-											<li><a href="#">Something else here</a>
-											</li>
-											<li class="divider"></li>
-											<li><a href="#">Separated link</a>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<!-- /.panel-heading -->
-							<div class="panel-body">
-								<div id="morris-area-chart"></div>
-							</div>
-							<!-- /.panel-body -->
-						</div>
-						<!-- /.panel -->
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
-								<div class="pull-right">
-									<div class="btn-group">
-										<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-											Actions
-											<span class="caret"></span>
-										</button>
-										<ul class="dropdown-menu pull-right" role="menu">
-											<li><a href="#">Action</a>
-											</li>
-											<li><a href="#">Another action</a>
-											</li>
-											<li><a href="#">Something else here</a>
-											</li>
-											<li class="divider"></li>
-											<li><a href="#">Separated link</a>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<!-- /.panel-heading -->
-							<div class="panel-body">
-								<div class="row">
-									<div class="col-lg-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-hover table-striped">
+						<!-- /.row -->
+						
+						 <div class="row">
+							<div class="col-lg-12">
+								<div class="panel panel-default" style="overflow:auto;">
+									<div class="panel-heading">All Panjayaths SHG Repayment Pending Info</div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<div class="dataTable_wrapper">
+											<table class="table table-striped table-bordered table-hover" id="details-table">
 												<thead>
 													<tr>
-														<th>#</th>
-														<th>Date</th>
-														<th>Time</th>
-														<th>Amount</th>
+														<th>Panjayath Name</th>
+														<th>Custer</th>
+														<th>Block</th>
+														<th>No of SHGs</th>
+														<th>Pending Amount</th>
+														<th>Last Updated On</th>
 													</tr>
 												</thead>
-												<tbody>
-													<tr>
-														<td>3326</td>
-														<td>10/21/2013</td>
-														<td>3:29 PM</td>
-														<td>$321.33</td>
-													</tr>
-													<tr>
-														<td>3325</td>
-														<td>10/21/2013</td>
-														<td>3:20 PM</td>
-														<td>$234.34</td>
-													</tr>
-													<tr>
-														<td>3324</td>
-														<td>10/21/2013</td>
-														<td>3:03 PM</td>
-														<td>$724.17</td>
-													</tr>
-													<tr>
-														<td>3323</td>
-														<td>10/21/2013</td>
-														<td>3:00 PM</td>
-														<td>$23.71</td>
-													</tr>
-													<tr>
-														<td>3322</td>
-														<td>10/21/2013</td>
-														<td>2:49 PM</td>
-														<td>$8345.23</td>
-													</tr>
-													<tr>
-														<td>3321</td>
-														<td>10/21/2013</td>
-														<td>2:23 PM</td>
-														<td>$245.12</td>
-													</tr>
-													<tr>
-														<td>3320</td>
-														<td>10/21/2013</td>
-														<td>2:15 PM</td>
-														<td>$5663.54</td>
-													</tr>
-													<tr>
-														<td>3319</td>
-														<td>10/21/2013</td>
-														<td>2:13 PM</td>
-														<td>$943.45</td>
-													</tr>
-												</tbody>
+												<tbody id="details-table-body"></tbody>
 											</table>
 										</div>
-										<!-- /.table-responsive -->
+										<!-- /.table-responsive -->                            
 									</div>
-									<!-- /.col-lg-4 (nested) -->
-									<div class="col-lg-8">
-										<div id="morris-bar-chart"></div>
-									</div>
-									<!-- /.col-lg-8 (nested) -->
+									<!-- /.panel-body -->
 								</div>
-								<!-- /.row -->
+								<!-- /.panel -->
 							</div>
-							<!-- /.panel-body -->
+							<!-- /.col-lg-12 -->
 						</div>
-						<!-- /.panel -->
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<i class="fa fa-clock-o fa-fw"></i> Responsive Timeline
+						<!-- /.row -->
+						</div>
+						
+						<div id="selected-panjayath-container" class="hidden">
+						<div class="row">
+							<div class="col-lg-3 col-md-6 col-sm-6">
+								<div class="panel panel-primary">
+									<div class="panel-heading">
+										<div class="row">
+											<div class="col-xs-3">
+												<i class="fa fa-money fa-3x"></i>
+											</div>
+											<div class="col-xs-9 text-right">
+												<div id="panjayathTotalRepaymentAmount" class="huge"></div>
+												<div>Total Repayable Amount</div>
+											</div>
+										</div>
+									</div>
+									<a href="#" class="hidden">
+										<div class="panel-footer">
+											<span class="pull-left">View Details</span>
+											<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
+									</a>
+								</div>
 							</div>
-							<!-- /.panel-heading -->
-							<div class="panel-body">
-								<ul class="timeline">
-									<li>
-										<div class="timeline-badge"><i class="fa fa-check"></i>
-										</div>
-										<div class="timeline-panel">
-											<div class="timeline-heading">
-												<h4 class="timeline-title">Lorem ipsum dolor</h4>
-												<p><small class="text-muted"><i class="fa fa-clock-o"></i> 11 hours ago via Twitter</small>
-												</p>
+							<div class="col-lg-3 col-md-6 col-sm-6">
+								<div class="panel panel-green">
+									<div class="panel-heading">
+										<div class="row">
+											<div class="col-xs-3">
+												<i class="fa fa-money fa-3x"></i>
 											</div>
-											<div class="timeline-body">
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
+											<div class="col-xs-9 text-right">
+												<div id="panjayathTotalRepaymentAmountPaid" class="huge"></div>
+												<div>Total Repayment Amount Paid</div>
 											</div>
 										</div>
-									</li>
-									<li class="timeline-inverted">
-										<div class="timeline-badge warning"><i class="fa fa-credit-card"></i>
+									</div>
+									<a href="#" class="hidden">
+										<div class="panel-footer">
+											<span class="pull-left">View Details</span>
+											<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
 										</div>
-										<div class="timeline-panel">
-											<div class="timeline-heading">
-												<h4 class="timeline-title">Lorem ipsum dolor</h4>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-6 col-sm-6">
+								<div class="panel panel-yellow">
+									<div class="panel-heading">
+										<div class="row">
+											<div class="col-xs-3">
+												<i class="fa fa-tasks fa-3x"></i>
 											</div>
-											<div class="timeline-body">
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dolorem quibusdam, tenetur commodi provident cumque magni voluptatem libero, quis rerum. Fugiat esse debitis optio, tempore. Animi officiis alias, officia repellendus.</p>
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium maiores odit qui est tempora eos, nostrum provident explicabo dignissimos debitis vel! Adipisci eius voluptates, ad aut recusandae minus eaque facere.</p>
-											</div>
-										</div>
-									</li>
-									<li>
-										<div class="timeline-badge danger"><i class="fa fa-bomb"></i>
-										</div>
-										<div class="timeline-panel">
-											<div class="timeline-heading">
-												<h4 class="timeline-title">Lorem ipsum dolor</h4>
-											</div>
-											<div class="timeline-body">
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus numquam facilis enim eaque, tenetur nam id qui vel velit similique nihil iure molestias aliquam, voluptatem totam quaerat, magni commodi quisquam.</p>
+											<div class="col-xs-9 text-right">
+												<div id="panjayathTotalPendingInstallments" class="huge"></div>
+												<div>Total Pending Installments</div>
 											</div>
 										</div>
-									</li>
-									<li class="timeline-inverted">
-										<div class="timeline-panel">
-											<div class="timeline-heading">
-												<h4 class="timeline-title">Lorem ipsum dolor</h4>
+									</div>
+									<a href="#" class="hidden">
+										<div class="panel-footer">
+											<span class="pull-left">View Details</span>
+											<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-6 col-sm-6">
+								<div class="panel panel-red">
+									<div class="panel-heading">
+										<div class="row">
+											<div class="col-xs-3">
+												<i class="fa fa-money fa-3x"></i>
 											</div>
-											<div class="timeline-body">
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est quaerat asperiores sapiente, eligendi, nihil. Itaque quos, alias sapiente rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut debitis!</p>
+											<div class="col-xs-9 text-right">
+												<div id="panjayathTotalPendingAmount" class="huge"></div>
+												<div>Total Repayable Amount Pending</div>
 											</div>
 										</div>
-									</li>
-									<li>
-										<div class="timeline-badge info"><i class="fa fa-save"></i>
+									</div>
+									<a href="#" class="hidden">
+										<div class="panel-footer">
+											<span class="pull-left">View Details</span>
+											<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
 										</div>
-										<div class="timeline-panel">
-											<div class="timeline-heading">
-												<h4 class="timeline-title">Lorem ipsum dolor</h4>
+									</a>
+								</div>
+							</div>
+						</div>
+						<!-- /.row -->
+						
+						 <div class="row">
+							<div class="col-lg-12">
+								<div class="panel panel-default" style="overflow:auto;">
+									<div class="panel-heading">PLF Loan details of SHG Leaders</div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<div class="dataTable_wrapper">
+											<table class="table table-striped table-bordered table-hover" id="plf-loan-details-table">
+												<thead>
+													<tr>
+														<th>SHG Leader Name</th>
+														<th>No of PLF Loans</th>											
+														<th>Loan Approved Amount</th>
+														<th>Loan Repayment Amount Paid</th>
+														<th>Pending Installments</th>											
+														<th>Pending Repayment Amount</th>
+														<th>Remaining Installments</th>
+													</tr>
+												</thead>
+												<tbody id="plf-loan-details-table-body"></tbody>
+											</table>
+										</div>
+										<!-- /.table-responsive -->                            
+									</div>
+									<!-- /.panel-body -->
+								</div>
+								<!-- /.panel -->
+							</div>
+							<!-- /.col-lg-12 -->
+						</div>
+						<!-- /.row -->
+						</div>
+						
+						<div class="row hidden">
+							<div class="col-lg-8">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+										<div class="pull-right">
+											<div class="btn-group">
+												<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+													Actions
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu pull-right" role="menu">
+													<li><a href="#">Action</a>
+													</li>
+													<li><a href="#">Another action</a>
+													</li>
+													<li><a href="#">Something else here</a>
+													</li>
+													<li class="divider"></li>
+													<li><a href="#">Separated link</a>
+													</li>
+												</ul>
 											</div>
-											<div class="timeline-body">
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis minus modi quam ipsum alias at est molestiae excepturi delectus nesciunt, quibusdam debitis amet, beatae consequuntur impedit nulla qui! Laborum, atque.</p>
-												<hr>
-												<div class="btn-group">
-													<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-														<i class="fa fa-gear"></i>  <span class="caret"></span>
-													</button>
-													<ul class="dropdown-menu" role="menu">
-														<li><a href="#">Action</a>
-														</li>
-														<li><a href="#">Another action</a>
-														</li>
-														<li><a href="#">Something else here</a>
-														</li>
-														<li class="divider"></li>
-														<li><a href="#">Separated link</a>
-														</li>
-													</ul>
+										</div>
+									</div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<div id="morris-area-chart"></div>
+									</div>
+									<!-- /.panel-body -->
+								</div>
+								<!-- /.panel -->
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
+										<div class="pull-right">
+											<div class="btn-group">
+												<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+													Actions
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu pull-right" role="menu">
+													<li><a href="#">Action</a>
+													</li>
+													<li><a href="#">Another action</a>
+													</li>
+													<li><a href="#">Something else here</a>
+													</li>
+													<li class="divider"></li>
+													<li><a href="#">Separated link</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<div class="row">
+											<div class="col-lg-4">
+												<div class="table-responsive">
+													<table class="table table-bordered table-hover table-striped">
+														<thead>
+															<tr>
+																<th>#</th>
+																<th>Date</th>
+																<th>Time</th>
+																<th>Amount</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td>3326</td>
+																<td>10/21/2013</td>
+																<td>3:29 PM</td>
+																<td>$321.33</td>
+															</tr>
+															<tr>
+																<td>3325</td>
+																<td>10/21/2013</td>
+																<td>3:20 PM</td>
+																<td>$234.34</td>
+															</tr>
+															<tr>
+																<td>3324</td>
+																<td>10/21/2013</td>
+																<td>3:03 PM</td>
+																<td>$724.17</td>
+															</tr>
+															<tr>
+																<td>3323</td>
+																<td>10/21/2013</td>
+																<td>3:00 PM</td>
+																<td>$23.71</td>
+															</tr>
+															<tr>
+																<td>3322</td>
+																<td>10/21/2013</td>
+																<td>2:49 PM</td>
+																<td>$8345.23</td>
+															</tr>
+															<tr>
+																<td>3321</td>
+																<td>10/21/2013</td>
+																<td>2:23 PM</td>
+																<td>$245.12</td>
+															</tr>
+															<tr>
+																<td>3320</td>
+																<td>10/21/2013</td>
+																<td>2:15 PM</td>
+																<td>$5663.54</td>
+															</tr>
+															<tr>
+																<td>3319</td>
+																<td>10/21/2013</td>
+																<td>2:13 PM</td>
+																<td>$943.45</td>
+															</tr>
+														</tbody>
+													</table>
 												</div>
+												<!-- /.table-responsive -->
 											</div>
+											<!-- /.col-lg-4 (nested) -->
+											<div class="col-lg-8">
+												<div id="morris-bar-chart"></div>
+											</div>
+											<!-- /.col-lg-8 (nested) -->
 										</div>
-									</li>
-									<li>
-										<div class="timeline-panel">
-											<div class="timeline-heading">
-												<h4 class="timeline-title">Lorem ipsum dolor</h4>
-											</div>
-											<div class="timeline-body">
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi fuga odio quibusdam. Iure expedita, incidunt unde quis nam! Quod, quisquam. Officia quam qui adipisci quas consequuntur nostrum sequi. Consequuntur, commodi.</p>
-											</div>
-										</div>
-									</li>
-									<li class="timeline-inverted">
-										<div class="timeline-badge success"><i class="fa fa-graduation-cap"></i>
-										</div>
-										<div class="timeline-panel">
-											<div class="timeline-heading">
-												<h4 class="timeline-title">Lorem ipsum dolor</h4>
-											</div>
-											<div class="timeline-body">
-												<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt obcaecati, quaerat tempore officia voluptas debitis consectetur culpa amet, accusamus dolorum fugiat, animi dicta aperiam, enim incidunt quisquam maxime neque eaque.</p>
-											</div>
-										</div>
-									</li>
-								</ul>
+										<!-- /.row -->
+									</div>
+									<!-- /.panel-body -->
+								</div>
+								<!-- /.panel -->
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<i class="fa fa-clock-o fa-fw"></i> Responsive Timeline
+									</div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<ul class="timeline">
+											<li>
+												<div class="timeline-badge"><i class="fa fa-check"></i>
+												</div>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">Lorem ipsum dolor</h4>
+														<p><small class="text-muted"><i class="fa fa-clock-o"></i> 11 hours ago via Twitter</small>
+														</p>
+													</div>
+													<div class="timeline-body">
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
+													</div>
+												</div>
+											</li>
+											<li class="timeline-inverted">
+												<div class="timeline-badge warning"><i class="fa fa-credit-card"></i>
+												</div>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">Lorem ipsum dolor</h4>
+													</div>
+													<div class="timeline-body">
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dolorem quibusdam, tenetur commodi provident cumque magni voluptatem libero, quis rerum. Fugiat esse debitis optio, tempore. Animi officiis alias, officia repellendus.</p>
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium maiores odit qui est tempora eos, nostrum provident explicabo dignissimos debitis vel! Adipisci eius voluptates, ad aut recusandae minus eaque facere.</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="timeline-badge danger"><i class="fa fa-bomb"></i>
+												</div>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">Lorem ipsum dolor</h4>
+													</div>
+													<div class="timeline-body">
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus numquam facilis enim eaque, tenetur nam id qui vel velit similique nihil iure molestias aliquam, voluptatem totam quaerat, magni commodi quisquam.</p>
+													</div>
+												</div>
+											</li>
+											<li class="timeline-inverted">
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">Lorem ipsum dolor</h4>
+													</div>
+													<div class="timeline-body">
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est quaerat asperiores sapiente, eligendi, nihil. Itaque quos, alias sapiente rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut debitis!</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="timeline-badge info"><i class="fa fa-save"></i>
+												</div>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">Lorem ipsum dolor</h4>
+													</div>
+													<div class="timeline-body">
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis minus modi quam ipsum alias at est molestiae excepturi delectus nesciunt, quibusdam debitis amet, beatae consequuntur impedit nulla qui! Laborum, atque.</p>
+														<hr>
+														<div class="btn-group">
+															<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+																<i class="fa fa-gear"></i>  <span class="caret"></span>
+															</button>
+															<ul class="dropdown-menu" role="menu">
+																<li><a href="#">Action</a>
+																</li>
+																<li><a href="#">Another action</a>
+																</li>
+																<li><a href="#">Something else here</a>
+																</li>
+																<li class="divider"></li>
+																<li><a href="#">Separated link</a>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">Lorem ipsum dolor</h4>
+													</div>
+													<div class="timeline-body">
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi fuga odio quibusdam. Iure expedita, incidunt unde quis nam! Quod, quisquam. Officia quam qui adipisci quas consequuntur nostrum sequi. Consequuntur, commodi.</p>
+													</div>
+												</div>
+											</li>
+											<li class="timeline-inverted">
+												<div class="timeline-badge success"><i class="fa fa-graduation-cap"></i>
+												</div>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">Lorem ipsum dolor</h4>
+													</div>
+													<div class="timeline-body">
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt obcaecati, quaerat tempore officia voluptas debitis consectetur culpa amet, accusamus dolorum fugiat, animi dicta aperiam, enim incidunt quisquam maxime neque eaque.</p>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+									<!-- /.panel-body -->
+								</div>
+								<!-- /.panel -->
 							</div>
-							<!-- /.panel-body -->
+							<!-- /.col-lg-8 -->
+							<div class="col-lg-4">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<i class="fa fa-bell fa-fw"></i> Notifications Panel
+									</div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<div class="list-group">
+											<a href="#" class="list-group-item">
+												<i class="fa fa-comment fa-fw"></i> New Comment
+												<span class="pull-right text-muted small"><em>4 minutes ago</em>
+												</span>
+											</a>
+											<a href="#" class="list-group-item">
+												<i class="fa fa-twitter fa-fw"></i> 3 New Followers
+												<span class="pull-right text-muted small"><em>12 minutes ago</em>
+												</span>
+											</a>
+											<a href="#" class="list-group-item">
+												<i class="fa fa-envelope fa-fw"></i> Message Sent
+												<span class="pull-right text-muted small"><em>27 minutes ago</em>
+												</span>
+											</a>
+											<a href="#" class="list-group-item">
+												<i class="fa fa-tasks fa-fw"></i> New Task
+												<span class="pull-right text-muted small"><em>43 minutes ago</em>
+												</span>
+											</a>
+											<a href="#" class="list-group-item">
+												<i class="fa fa-upload fa-fw"></i> Server Rebooted
+												<span class="pull-right text-muted small"><em>11:32 AM</em>
+												</span>
+											</a>
+											<a href="#" class="list-group-item">
+												<i class="fa fa-bolt fa-fw"></i> Server Crashed!
+												<span class="pull-right text-muted small"><em>11:13 AM</em>
+												</span>
+											</a>
+											<a href="#" class="list-group-item">
+												<i class="fa fa-warning fa-fw"></i> Server Not Responding
+												<span class="pull-right text-muted small"><em>10:57 AM</em>
+												</span>
+											</a>
+											<a href="#" class="list-group-item">
+												<i class="fa fa-shopping-cart fa-fw"></i> New Order Placed
+												<span class="pull-right text-muted small"><em>9:49 AM</em>
+												</span>
+											</a>
+											<a href="#" class="list-group-item">
+												<i class="fa fa-money fa-fw"></i> Payment Received
+												<span class="pull-right text-muted small"><em>Yesterday</em>
+												</span>
+											</a>
+										</div>
+										<!-- /.list-group -->
+										<a href="#" class="btn btn-default btn-block">View All Alerts</a>
+									</div>
+									<!-- /.panel-body -->
+								</div>
+								<!-- /.panel -->
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
+									</div>
+									<div class="panel-body">
+										<div id="morris-donut-chart"></div>
+										<a href="#" class="btn btn-default btn-block">View Details</a>
+									</div>
+									<!-- /.panel-body -->
+								</div>
+								<!-- /.panel -->
+								<div class="chat-panel panel panel-default">
+									<div class="panel-heading">
+										<i class="fa fa-comments fa-fw"></i>
+										Chat
+										<div class="btn-group pull-right">
+											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+												<i class="fa fa-chevron-down"></i>
+											</button>
+											<ul class="dropdown-menu slidedown">
+												<li>
+													<a href="#">
+														<i class="fa fa-refresh fa-fw"></i> Refresh
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<i class="fa fa-check-circle fa-fw"></i> Available
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<i class="fa fa-times fa-fw"></i> Busy
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<i class="fa fa-clock-o fa-fw"></i> Away
+													</a>
+												</li>
+												<li class="divider"></li>
+												<li>
+													<a href="#">
+														<i class="fa fa-sign-out fa-fw"></i> Sign Out
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<ul class="chat">
+											<li class="left clearfix">
+												<span class="chat-img pull-left">
+													<img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />
+												</span>
+												<div class="chat-body clearfix">
+													<div class="header">
+														<strong class="primary-font">Jack Sparrow</strong>
+														<small class="pull-right text-muted">
+															<i class="fa fa-clock-o fa-fw"></i> 12 mins ago
+														</small>
+													</div>
+													<p>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+													</p>
+												</div>
+											</li>
+											<li class="right clearfix">
+												<span class="chat-img pull-right">
+													<img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" />
+												</span>
+												<div class="chat-body clearfix">
+													<div class="header">
+														<small class=" text-muted">
+															<i class="fa fa-clock-o fa-fw"></i> 13 mins ago</small>
+														<strong class="pull-right primary-font">Bhaumik Patel</strong>
+													</div>
+													<p>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+													</p>
+												</div>
+											</li>
+											<li class="left clearfix">
+												<span class="chat-img pull-left">
+													<img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />
+												</span>
+												<div class="chat-body clearfix">
+													<div class="header">
+														<strong class="primary-font">Jack Sparrow</strong>
+														<small class="pull-right text-muted">
+															<i class="fa fa-clock-o fa-fw"></i> 14 mins ago</small>
+													</div>
+													<p>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+													</p>
+												</div>
+											</li>
+											<li class="right clearfix">
+												<span class="chat-img pull-right">
+													<img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" />
+												</span>
+												<div class="chat-body clearfix">
+													<div class="header">
+														<small class=" text-muted">
+															<i class="fa fa-clock-o fa-fw"></i> 15 mins ago</small>
+														<strong class="pull-right primary-font">Bhaumik Patel</strong>
+													</div>
+													<p>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+													</p>
+												</div>
+											</li>
+										</ul>
+									</div>
+									<!-- /.panel-body -->
+									<div class="panel-footer">
+										<div class="input-group">
+											<input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+											<span class="input-group-btn">
+												<button class="btn btn-warning btn-sm" id="btn-chat">
+													Send
+												</button>
+											</span>
+										</div>
+									</div>
+									<!-- /.panel-footer -->
+								</div>
+								<!-- /.panel .chat-panel -->
+							</div>
+							<!-- /.col-lg-4 -->
 						</div>
-						<!-- /.panel -->
+						<!-- /.row -->
 					</div>
-					<!-- /.col-lg-8 -->
-					<div class="col-lg-4">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<i class="fa fa-bell fa-fw"></i> Notifications Panel
-							</div>
-							<!-- /.panel-heading -->
-							<div class="panel-body">
-								<div class="list-group">
-									<a href="#" class="list-group-item">
-										<i class="fa fa-comment fa-fw"></i> New Comment
-										<span class="pull-right text-muted small"><em>4 minutes ago</em>
-										</span>
-									</a>
-									<a href="#" class="list-group-item">
-										<i class="fa fa-twitter fa-fw"></i> 3 New Followers
-										<span class="pull-right text-muted small"><em>12 minutes ago</em>
-										</span>
-									</a>
-									<a href="#" class="list-group-item">
-										<i class="fa fa-envelope fa-fw"></i> Message Sent
-										<span class="pull-right text-muted small"><em>27 minutes ago</em>
-										</span>
-									</a>
-									<a href="#" class="list-group-item">
-										<i class="fa fa-tasks fa-fw"></i> New Task
-										<span class="pull-right text-muted small"><em>43 minutes ago</em>
-										</span>
-									</a>
-									<a href="#" class="list-group-item">
-										<i class="fa fa-upload fa-fw"></i> Server Rebooted
-										<span class="pull-right text-muted small"><em>11:32 AM</em>
-										</span>
-									</a>
-									<a href="#" class="list-group-item">
-										<i class="fa fa-bolt fa-fw"></i> Server Crashed!
-										<span class="pull-right text-muted small"><em>11:13 AM</em>
-										</span>
-									</a>
-									<a href="#" class="list-group-item">
-										<i class="fa fa-warning fa-fw"></i> Server Not Responding
-										<span class="pull-right text-muted small"><em>10:57 AM</em>
-										</span>
-									</a>
-									<a href="#" class="list-group-item">
-										<i class="fa fa-shopping-cart fa-fw"></i> New Order Placed
-										<span class="pull-right text-muted small"><em>9:49 AM</em>
-										</span>
-									</a>
-									<a href="#" class="list-group-item">
-										<i class="fa fa-money fa-fw"></i> Payment Received
-										<span class="pull-right text-muted small"><em>Yesterday</em>
-										</span>
-									</a>
-								</div>
-								<!-- /.list-group -->
-								<a href="#" class="btn btn-default btn-block">View All Alerts</a>
-							</div>
-							<!-- /.panel-body -->
-						</div>
-						<!-- /.panel -->
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
-							</div>
-							<div class="panel-body">
-								<div id="morris-donut-chart"></div>
-								<a href="#" class="btn btn-default btn-block">View Details</a>
-							</div>
-							<!-- /.panel-body -->
-						</div>
-						<!-- /.panel -->
-						<div class="chat-panel panel panel-default">
-							<div class="panel-heading">
-								<i class="fa fa-comments fa-fw"></i>
-								Chat
-								<div class="btn-group pull-right">
-									<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-										<i class="fa fa-chevron-down"></i>
-									</button>
-									<ul class="dropdown-menu slidedown">
-										<li>
-											<a href="#">
-												<i class="fa fa-refresh fa-fw"></i> Refresh
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-check-circle fa-fw"></i> Available
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-times fa-fw"></i> Busy
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-clock-o fa-fw"></i> Away
-											</a>
-										</li>
-										<li class="divider"></li>
-										<li>
-											<a href="#">
-												<i class="fa fa-sign-out fa-fw"></i> Sign Out
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-							<!-- /.panel-heading -->
-							<div class="panel-body">
-								<ul class="chat">
-									<li class="left clearfix">
-										<span class="chat-img pull-left">
-											<img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />
-										</span>
-										<div class="chat-body clearfix">
-											<div class="header">
-												<strong class="primary-font">Jack Sparrow</strong>
-												<small class="pull-right text-muted">
-													<i class="fa fa-clock-o fa-fw"></i> 12 mins ago
-												</small>
-											</div>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-											</p>
-										</div>
-									</li>
-									<li class="right clearfix">
-										<span class="chat-img pull-right">
-											<img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" />
-										</span>
-										<div class="chat-body clearfix">
-											<div class="header">
-												<small class=" text-muted">
-													<i class="fa fa-clock-o fa-fw"></i> 13 mins ago</small>
-												<strong class="pull-right primary-font">Bhaumik Patel</strong>
-											</div>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-											</p>
-										</div>
-									</li>
-									<li class="left clearfix">
-										<span class="chat-img pull-left">
-											<img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />
-										</span>
-										<div class="chat-body clearfix">
-											<div class="header">
-												<strong class="primary-font">Jack Sparrow</strong>
-												<small class="pull-right text-muted">
-													<i class="fa fa-clock-o fa-fw"></i> 14 mins ago</small>
-											</div>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-											</p>
-										</div>
-									</li>
-									<li class="right clearfix">
-										<span class="chat-img pull-right">
-											<img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" />
-										</span>
-										<div class="chat-body clearfix">
-											<div class="header">
-												<small class=" text-muted">
-													<i class="fa fa-clock-o fa-fw"></i> 15 mins ago</small>
-												<strong class="pull-right primary-font">Bhaumik Patel</strong>
-											</div>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-											</p>
-										</div>
-									</li>
-								</ul>
-							</div>
-							<!-- /.panel-body -->
-							<div class="panel-footer">
-								<div class="input-group">
-									<input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-									<span class="input-group-btn">
-										<button class="btn btn-warning btn-sm" id="btn-chat">
-											Send
-										</button>
-									</span>
-								</div>
-							</div>
-							<!-- /.panel-footer -->
-						</div>
-						<!-- /.panel .chat-panel -->
-					</div>
-					<!-- /.col-lg-4 -->
-				</div>
-				<!-- /.row -->
-			</div>
-			<!-- /#page-wrapper -->
+					<!-- /#page-wrapper -->
 
-		</div>
-		<!-- /#wrapper -->
+				</div>
+				<!-- /#wrapper -->
+				
+				<div id="loansView" class="page-view hidden">
+					<div id="page-wrapper">
+					
+						 <div class="row">
+							<div class="col-lg-12">
+								<div class="panel panel-default" style="overflow:auto;">
+									<div class="panel-heading">PLF Loan details of SHG Leaders</div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<div class="dataTable_wrapper">
+											<div id="plf-loan-details-table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer"><div class="row"><div class="col-sm-6"><div class="dataTables_length" id="plf-loan-details-table_length"><label>Show <select name="plf-loan-details-table_length" aria-controls="plf-loan-details-table" class="form-control input-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label></div></div><div class="col-sm-6"><div id="plf-loan-details-table_filter" class="dataTables_filter"><label>Search:<input type="search" class="form-control input-sm" placeholder="" aria-controls="plf-loan-details-table"></label></div></div></div><div class="row"><div class="col-sm-12"><table class="table table-striped table-bordered table-hover dataTable no-footer" id="plf-loan-details-table" role="grid" aria-describedby="plf-loan-details-table_info" style="width: 738px;">
+												<thead>
+													<tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="plf-loan-details-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="SHG Leader Name: activate to sort column descending" style="width: 47px;">SHG Leader Name</th><th class="sorting" tabindex="0" aria-controls="plf-loan-details-table" rowspan="1" colspan="1" aria-label="No of PLF Loans: activate to sort column ascending" style="width: 43px;">No of PLF Loans</th><th class="sorting" tabindex="0" aria-controls="plf-loan-details-table" rowspan="1" colspan="1" aria-label="Loan Approved Amount: activate to sort column ascending" style="width: 67px;">Loan Approved Amount</th><th class="sorting" tabindex="0" aria-controls="plf-loan-details-table" rowspan="1" colspan="1" aria-label="Loan Repayment Amount Paid: activate to sort column ascending" style="width: 78px;">Loan Repayment Amount Paid</th><th class="sorting" tabindex="0" aria-controls="plf-loan-details-table" rowspan="1" colspan="1" aria-label="Pending Installments: activate to sort column ascending" style="width: 84px;">Pending Installments</th><th class="sorting" tabindex="0" aria-controls="plf-loan-details-table" rowspan="1" colspan="1" aria-label="Pending Repayment Amount: activate to sort column ascending" style="width: 77px;">Pending Repayment Amount</th><th class="sorting" tabindex="0" aria-controls="plf-loan-details-table" rowspan="1" colspan="1" aria-label="Remaining Installments: activate to sort column ascending" style="width: 84px;">Remaining Installments</th></tr>
+												</thead>
+												<tbody id="plf-loan-details-table-body"><tr role="row" class="odd danger"><td class="sorting_1">S1 Karupasamy SHG</td><td>4</td><td><span class="fa fa-rupee"></span> 1,40,000</td><td><span class="fa fa-rupee"></span> 1,11,630</td><td>11</td><td><span class="fa fa-rupee"></span> 20,150</td><td>6</td></tr><tr role="row" class="even danger"><td class="sorting_1">S11 Ewarast SHG</td><td>2</td><td><span class="fa fa-rupee"></span> 95,000</td><td><span class="fa fa-rupee"></span> 64,079</td><td>7</td><td><span class="fa fa-rupee"></span> 16,000</td><td>12</td></tr><tr role="row" class="odd danger"><td class="sorting_1">S17 Vinmalar</td><td>1</td><td><span class="fa fa-rupee"></span> 25,000</td><td><span class="fa fa-rupee"></span> 17,500</td><td>6</td><td><span class="fa fa-rupee"></span> 7,500</td><td>0</td></tr><tr role="row" class="even danger"><td class="sorting_1">S18 Saraswathi SHG</td><td>4</td><td><span class="fa fa-rupee"></span> 95,000</td><td><span class="fa fa-rupee"></span> 35,000</td><td>11</td><td><span class="fa fa-rupee"></span> 14,250</td><td>37</td></tr><tr role="row" class="odd danger"><td class="sorting_1">S19 Annaitherasa</td><td>1</td><td><span class="fa fa-rupee"></span> 1,25,000</td><td><span class="fa fa-rupee"></span> 31,250</td><td>4</td><td><span class="fa fa-rupee"></span> 25,000</td><td>11</td></tr><tr role="row" class="even danger"><td class="sorting_1">S20 Sun Rice Sgh</td><td>2</td><td><span class="fa fa-rupee"></span> 75,000</td><td><span class="fa fa-rupee"></span> 37,500</td><td>6</td><td><span class="fa fa-rupee"></span> 15,000</td><td>9</td></tr><tr role="row" class="odd warning"><td class="sorting_1">S21 SuyamsithajayamSHG</td><td>1</td><td><span class="fa fa-rupee"></span> 1,25,000</td><td><span class="fa fa-rupee"></span> 1,12,500</td><td>2</td><td><span class="fa fa-rupee"></span> 12,500</td><td>0</td></tr><tr role="row" class="even danger"><td class="sorting_1">S22 ArulSudar</td><td>6</td><td><span class="fa fa-rupee"></span> 6,15,000</td><td><span class="fa fa-rupee"></span> 84,815</td><td>27</td><td><span class="fa fa-rupee"></span> 1,01,247</td><td>110</td></tr><tr role="row" class="odd danger"><td class="sorting_1">S22 Jebamalai Madha Wshg</td><td>6</td><td><span class="fa fa-rupee"></span> 3,50,000</td><td><span class="fa fa-rupee"></span> 73,000</td><td>37</td><td><span class="fa fa-rupee"></span> 86,250</td><td>65</td></tr><tr role="row" class="even danger"><td class="sorting_1">S23 SelvaMatha Wshg</td><td>4</td><td><span class="fa fa-rupee"></span> 1,65,000</td><td><span class="fa fa-rupee"></span> 34,145</td><td>15</td><td><span class="fa fa-rupee"></span> 27,160</td><td>57</td></tr></tbody>
+											</table></div></div><div class="row"><div class="col-sm-6"><div class="dataTables_info" id="plf-loan-details-table_info" role="status" aria-live="polite">Showing 1 to 10 of 15 entries</div></div><div class="col-sm-6"><div class="dataTables_paginate paging_simple_numbers" id="plf-loan-details-table_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="plf-loan-details-table" tabindex="0" id="plf-loan-details-table_previous"><a href="#">Previous</a></li><li class="paginate_button active" aria-controls="plf-loan-details-table" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="plf-loan-details-table" tabindex="0"><a href="#">2</a></li><li class="paginate_button next" aria-controls="plf-loan-details-table" tabindex="0" id="plf-loan-details-table_next"><a href="#">Next</a></li></ul></div></div></div></div>
+										</div>
+										<!-- /.table-responsive -->                            
+									</div>
+									<!-- /.panel-body -->
+								</div>
+								<!-- /.panel -->
+							</div>
+							<!-- /.col-lg-12 -->
+						</div>
+						<!-- /.row -->											
+					</div>
+					<!-- /#page-wrapper -->
+
+				</div>
+				<!-- /#wrapper -->
+			</main>
+			<footer class="container-fluid">
+				<div class="custom-app-info row">
+					<div class="col-md-6 col-sm-6 col-xs-6"><strong>Panjayath:</strong> <span id="panjayath-info">All Panjayaths<span></div>
+					<div class="col-md-6 col-sm-6 col-xs-6 text-right"><strong>Cluster:</strong> <span id="cluster-info">Kamanayakanpatti</span></div>
+				</div>
+				<div id="panjayathViewFooter">				
+				<div id="dashboardActionLinks" class="row view-action-links">
+					<div class="col-md-3 col-sm-3 col-xs-3">
+						<a class="btn btn-block active" href="#dbhome"><i class="fa fa-home fa-2x"></i><br/>Dashboard Home</a>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-3">
+						<a class="btn btn-block" href="#todaysInmts"><i class="fa fa-tasks fa-2x"></i><br/>Today's Installments</a>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-3">
+						<a class="btn btn-block" href="#tomorrowsInmts"><i class="fa fa-tasks fa-2x"></i><br/>Tomorrow's Installments</a>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-3">
+						<a class="btn btn-block" href="#pendingInmts"><i class="fa fa-tasks fa-2x"></i><br/>Pending Installments</a>
+					</div>			
+				</div>
+				<div id="loansActionLinks" class="row view-action-links hidden">
+					<div class="col-md-3 col-sm-3 col-xs-3">
+						<a class="btn btn-block" href="#dbhome"><i class="fa fa-plus-circle fa-2x"></i><br/>New Pre-Request</a>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-3">
+						<a class="btn btn-block" href="#todaysInmts"><i class="fa fa-plus-circle fa-2x"></i><br/>New Loan</a>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-3">
+						<a class="btn btn-block" href="#tomorrowsInmts"><i class="fa fa-plus-circle fa-2x"></i><br/>New Repayment</a>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-3">
+						<a class="btn btn-block" href="#pendingInmts"><i class="fa fa-tasks fa-2x"></i><br/>All Repayments</a>
+					</div>			
+				</div>	
+				</div>	
+			</footer>
+		</div>			
 		
 		<!-- Cordova Phonegap Core Lib -->
 		<script type="text/javascript" src="cordova.js"></script>
