@@ -19,7 +19,7 @@ body {
 }
 
 #page-wrapper {
-    padding: 0 15px;
+    padding: 20px 0 15px;
     min-height: 568px;
     background-color: #fff;
 }
@@ -39,6 +39,19 @@ footer{
         border-left: 1px solid #e7e7e7;
     }*/
 	
+	#page-wrapper {
+		padding: 20px 15px 15px;
+	}
+	
+	header, header>nav, footer {
+		max-width:1200px;
+		margin:0 auto;
+	}
+	
+	.navbar-brand {
+		border-left: 1px solid #eee;
+	}
+	
 	#viewContainer {
 		max-width:1200px;
 		margin:0 auto;
@@ -55,7 +68,7 @@ footer{
 #viewContainer main{	
 	position: relative;
 	overflow: hidden;
-	padding:20px 0 90px;
+	padding-bottom:90px;
 }
 
 #viewContainer main:before {
